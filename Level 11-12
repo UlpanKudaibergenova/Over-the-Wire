@@ -12,4 +12,26 @@ bandit11@bandit.labs.overthewire.org's password:IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
 Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
 
 Welcome to OverTheWire!
+-----------------------------------------------------------------------------------------------------------------------------------
+We have to perform a ROT13 decode, to rotate these letters BACK by 13 positions. To achieve this, we can use either command:
+cat fileName.txt | tr “string1” “string2” OR
+tr “string1” “string2” < fileName.txt
 
+In our case, to decode the contents in data.txt, the command to use is
+tr “A-Za-z” “N-ZA-Mn-za-m”. This means that for:
+Upper case: Map from A-Z to N-ZA-M &
+Lower case: Map from a-z to n-za-m
+
+As such, any of the following command will output the decoded data.txt‘s contents:
+cat data.txt | tr “A-Za-z” “N-ZA-Mn-za-m”
+cat data.txt | tr “a-zA-Z” “n-za-mN-ZA-M” or
+cat data.txt | tr “[a-zA-Z]” “[n-za-mN-ZA-M]”
+cat data.txt | tr “n-za-mN-ZA-M” “a-zA-Z”
+------------------------------------------------------------------------------------------------------------------------------------
+bandit11@bandit:~$ ls
+data.txt
+bandit11@bandit:~$ cat data.txt
+Gur cnffjbeq vf 5Gr8L4qetPEsPk8htqjhRK8XSP6x2RHh
+bandit11@bandit:~$ cat data.txt | tr “A-Za-z” “N-ZA-Mn-za-m”
+The password is 5Te8Y4drgCRfCx8ugdwuEX8KFC6k2EUu
+bandit11@bandit:~$ exit
