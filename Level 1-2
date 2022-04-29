@@ -5,3 +5,15 @@ Commands you may need to solve this level
 ls, cd, cat, file, du, find
 
 
+PS C:\Windows\system32> ssh bandit1@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit1@bandit.labs.overthewire.org's password:boJ9jbbUNNfktd78OOpsqOltutMc3MY1
+Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
+Welcome to OverTheWire!
+
+
+bandit1@bandit:~$ cat ./-
+CV1DtqXWVFXTvM2F0k09SHz0YwRINYA9
+
+bandit1@bandit:~$exit
