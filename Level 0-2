@@ -5,3 +5,20 @@ Whenever you find a password for a level, use SSH (on port 2220) to log into tha
 
 Commands you may need to solve this level
 ls, cd, cat, file, du, find
+
+--------------------------------------------------------------------------------------
+
+PS C:\Windows\system32> ssh bandit0@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit0@bandit.labs.overthewire.org's password:bandit0
+Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux 
+
+
+Welcome to OverTheWire!
+
+bandit0@bandit:~$ ls
+readme
+bandit0@bandit:~$ cat readme
+boJ9jbbUNNfktd78OOpsqOltutMc3MY1
+This is the password for the next level. 
