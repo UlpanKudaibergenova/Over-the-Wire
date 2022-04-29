@@ -1,0 +1,15 @@
+Level Goal
+The password for the next level is stored in the file data.txt, where all lowercase (a-z) and uppercase (A-Z) letters have been rotated by 13 positions
+
+Commands you may need to solve this level
+grep, sort, uniq, strings, base64, tr, tar, gzip, bzip2, xxd
+
+
+PS C:\Windows\system32> ssh bandit11@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit11@bandit.labs.overthewire.org's password:IFukwKGsFW8MOq3IRFqrxE1hxTNEbUPR
+Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
+
+Welcome to OverTheWire!
+
