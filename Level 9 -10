@@ -12,9 +12,20 @@ Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
 
 Welcome to OverTheWire!
 
+---------------------------------------------------------------------------------------------------------------------------------------------
+[# Step 1]: Connect and login to the account with the username & password stated above.
 
+[# Step 2]: After logging in, we will be at the home directory.
+Running ls, will see that data.txt is right at the home directory. Hence, we don’t have to perform cd.
 
+[# Step 3]: Running file data.txt will output data.txt: data. This is the file type.
+According to file's Manpage, data is usually “binary” or non-printable. Hence, it is not a plaintext ASCII file.
+“ strings is mainly useful for determining the contents of non-text files.”
+Thus, to get the human-readable strings, we can run strings data.txt .
 
+[# Step 4]: Since the password is preceded by several ‘=’ characters, we can use regular expression, by passing grep -E PATTERN options.
+Finally, based on the image below, our PATTERN will be grep -E “=+” . Hence, to get the password, strings data.txt | grep -E “=+”.
+-----------------------------------------------------------------------------------------------------------------------------------------------
 bandit9@bandit:~$ strings data.txt | grep -E "=+"
 ========== the*2i"4
 =:G e
