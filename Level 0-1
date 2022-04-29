@@ -22,3 +22,6 @@ readme
 bandit0@bandit:~$ cat readme
 boJ9jbbUNNfktd78OOpsqOltutMc3MY1
 This is the password for the next level. 
+
+bandit0@bandit:~$exit 
+To log out!
