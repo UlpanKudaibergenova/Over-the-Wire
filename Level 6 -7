@@ -1,0 +1,42 @@
+Level Goal
+The password for the next level is stored somewhere on the server and has all of the following properties:
+
+owned by user bandit7
+owned by group bandit6
+33 bytes in size
+Commands you may need to solve this level
+ls, cd, cat, file, du, find, grep
+
+
+PS C:\Windows\system32> ssh bandit6@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit6@bandit.labs.overthewire.org's password:DXjZPULLxYr17uwoI01bNLQbtFemEgo7
+Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
+
+Welcome to OverTheWire!
+
+bandit6@bandit:~$ find / - size 33c - group bandit6 -user bandit7
+find: ‘/root’: Permission denied
+find: ‘/home/bandit28-git’: Permission denied
+find: ‘/home/bandit30-git’: Permission denied
+find: ‘/home/bandit5/inhere’: Permission denied
+find: ‘/home/bandit27-git’: Permission denied
+find: ‘/home/bandit29-git’: Permission denied
+find: ‘/home/bandit31-git’: Permission denied
+/dev/pts/69
+WRONG !!!!!!                                       
+----------------------------------------------------------------------------------------------------------------------------------------------------
+- Specifying 2>/dev/null will filter out the errors so that they will not be output to your console.
+
+In more detail: 2 represents the error descriptor, which is where errors are written to. By default they are printed out on the console.
+
+\> redirects output to the specified place, in this case /dev/null
+
+/dev/null is the standard Linux device where you send output that you want ignored.
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+bandit6@bandit:~$ find / -user bandit7 -group bandit6 -size 33c 2>/dev/null
+/var/lib/dpkg/info/bandit7.password
+bandit6@bandit:~$ cat /var/lib/dpkg/info/bandit7.password
+HKBPTKQnIay4Fw76bEy8PVxKEDQRKTzs
+bandit6@bandit:~$ exit
