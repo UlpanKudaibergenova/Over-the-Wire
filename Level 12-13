@@ -14,3 +14,77 @@ This is a OverTheWire game server. More information on http://www.overthewire.or
 bandit12@bandit.labs.overthewire.org's password:5Gr8L4qetPEsPk8htqjhRK8XSP6x2RHh
 Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
 Welcome to OverTheWire!
+
+To find the password for Level 13
+
+[# Step 1]: Connect and login to the account with the username & password stated above.
+
+[# Step 2]: After logging in, we will be at the home directory. Running ls will see data.txt is right at the home directory. Hence, we don’t have to perform cd.
+
+[# Step 3]: As mention in the description, data.txt is a hexdump of a file that has been repeatedly compressed. To obtain the password for the next level, multiple decompression operations on the file are needed to be performed. Consequently, this would make CHANGES to the current directory. Unfortunately, we DO NOT have write permissions. As such, it is suggested to create a directory under /tmp to perform our activities.
+mkdir /tmp/myname123          # Create a folder under /tmp directory
+cp data.txt /tmp/myname123    # Copy data.txt into myname123 folder
+cd /tmp/myname123             # Navigate into myname123 folder
+ls                            # Will see data.txt
+
+
+[# Step 4]: Next, run file data.txt, which will output data.txt: ASCII text. This is the file type. Unlike in level 9, where file data.txt will output data. In this case, ASCII text means this is a plaintext ASCII file. Thus, it is printable. Hence, we can run cat data.txt, which we will see the content of a hexdump file:
+00000000: 1f8b 0808 0650 b45e 0203 6461 7461 322e  .....P.^..data2.
+00000010: 6269 6e00 013d 02c2 fd42 5a68 3931 4159  bin..=...BZh91AY
+00000020: 2653 598e 4f1c c800 001e 7fff fbf9 7fda  &SY.O...........
+00000030: 9e7f 4f76 9fcf fe7d 3fff f67d abde 5e9f  ..Ov...}?..}..^.
+[...]
+
+
+[# Step 5]:  (bandit12@bandit:/tmp/myname123$ xxd -r data.txt data)
+
+Since the file is hexdump of a file,
+using xxd -r <inputFile> <outputFile> command will:
+First, convert a hex dump back to its original BINARY form.
+Next, sent the results to the outputFile specified.
+[NOTE]:
+If outputFile is NOT provided (or a ‘-’ character is in its place), results are sent to standard output instead.
+Therefore, run xxd -r data.txt data to perform a reverse hex dump and output to a file named data.
+
+
+[# Step 6]: Run file data command, to display the file type.
+bandit12@bandit:/tmp/myname123$ file data
+data: gzip compressed data, was "data2.bin", last modified: Thu May  7 18:14:30 2020, max compression, from Unix
+
+
+[# Step 7]: In order to decompress a file successfully, we need to KNOW the proper EXTENSION of the file & convert the file to its appropriate file type.
+As such, the flow to decompress the repeatedly compressed data.txt goes like this:
+First, use file <fileName> command to DETERMINE the file type of the OUTPUT file.
+Second, use mv <source> <target> command to CHANGE the output file to its appropriate file type stated in the previous steps.
+Third, decompress / unzip the files using the appropriate type of command based on the file extension displayed in the 1st step :
+┌────────────────────────────────────────┬─────────────────────────┐
+|     file <fileName> Output message     |  Command to decompress  |
+├────────────────────────────────────────┼─────────────────────────┤
+| fileName.gz:  gzip compressed data     | gzip -d <fileName.gz>   |
+| fileName:     bzip2 compressed data    | bzip2 -d <fileName.bz2> |
+| fileName:     POSIX tar archive (GNU)  | tar xvf <fileName.tar>  |
+└────────────────────────────────────────┴─────────────────────────┘
+┌─────────┬───────────────────────────────────────────────┐
+│ Options │       Explanation (tar -xvf <fileName>)       │
+├─────────┼───────────────────────────────────────────────┤
+│ x       │ Extract the archive                           │
+│ v       │ Displays verbose information                  │
+│ f       │ Creates the archive with the given <fileName> │
+└─────────┴───────────────────────────────────────────────┘
+
+4. Repeat the above process until running file <target> will display a file type of ASCII text.
+5. If above return ASCII text, then run cat <target> to display the password in file target.
+
+bandit12@bandit:/tmp/myname123$ file data8.bin
+data8.bin: gzip compressed data, was "data9.bin", last modified: Thu May  7 18:14:30 2020, max compression, from Unix
+
+bandit12@bandit:/tmp/myname123$ mv data8.bin data8.gz
+bandit12@bandit:/tmp/myname123$ gzip -d data8.gz
+bandit12@bandit:/tmp/myname123$ file data8
+data8: ASCII text
+
+bandit12@bandit:/tmp/myname123$ cat data8
+The password is 8ZjyCRiBWFYkneahHwxCv3wb2a1ORpYL
+
+[# Step 8]: Run rm -rf /tmp/myname123 to delete the temporary created folder /tmp/myname123.
+[# Step 9]: To logout, run exit.
