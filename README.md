@@ -1,2 +1,2 @@
-# Over-the-Wire-
+# Over-the-Wire
 My attempt to pass all the levels 
