@@ -6,3 +6,62 @@ Next to ‘R’ and ‘Q’, the ‘B’ command also works in this version of t
 
 Commands you may need to solve this level
 ssh, telnet, nc, openssl, s_client, nmap
+
+
+PS C:\Windows\system32> ssh bandit15@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+
+bandit15@bandit.labs.overthewire.org's password: BfMYroe26WYalil77FoDi9qh59eK5xNr
+Linux bandit.otw.local 5.4.8 x86_64 GNU/Linux
+
+Welcome to OverTheWire!
+
+[# Step 1]
+>  ~ ssh bandit15@bandit.labs.overthewire.org -p 2220
+[# Step 2]
+bandit15@bandit:~$ openssl s_client -connect localhost:30001
+CONNECTED(00000003)
+depth=0 CN = localhost
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = localhost
+verify return:1
+[...]
+Start Time: 1592837631
+    Timeout   : 7200 (sec)
+    Verify return code: 18 (self signed certificate)
+    Extended master secret: yes
+---
+BfMYroe26WYalil77FoDi9qh59eK5xNr        # Input password here!
+Correct!
+cluFn7wTiGryunymYOu4RcffSxQluehd
+closed
+
+
+bandit15@bandit:~$ exit
+logout
+
+
+
+
+EXPLANATION
+[# Step 2]: 
+In this level, the challenge is similar to the previous one. However, it requires using SSL encryption. 
+In other words, we need to submit the bandit15’s password to localhost on port 30001 through an encrypted communication.
+
+As mentioned in the “OpenSSL Cookbook” (provided as one of the “Helpful Reading Material”):
+
+OpenSSL comes with a client tool that you can use to connect to a SECURE server.
+
+The tool is similar to telnet or nc, in the sense that it handles the SSL/TLS layer but allows you to fully control the layer that comes next.
+
+To connect to a server, you need to supply a hostname and a port.
+For example: $ openssl s_client -connect www.feistyduck.com:443
+
+Once you type the command, you’re going to see a lot of diagnostic output (more about that in a moment) followed by an opportunity to type whatever you want.
+
+Hence, using the openssl s_client -connect <hostname>:<port> syntax, we will input our command: *openssl s_client -connect localhost:30001*.
+
+Here, s_client implements a generic SSL/TLS client which can establish a transparent connection to a remote server speaking SSL/TLS.
+Also,-connect <hostname>:<port> specifies the hostname and optional port to connect to.
+
