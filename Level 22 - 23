@@ -9,6 +9,7 @@ If you are having problems understanding what it does, try executing it to see t
 Commands you may need to solve this level
 cron, crontab, crontab(5) (use “man 5 crontab” to access this)
 
+(https://www.geeksforgeeks.org/md5sum-linux-command/)
 -------------------------------------------------------------------------------------------------------------------------------------------------
 To find the password for Level 23
 [# Step 1]: Connect and login to the account with the username & password stated above.
