@@ -5,3 +5,81 @@ Unfortunately, someone has modified .bashrc to log you out when you log in with 
 Commands you may need to solve this level
 ssh, ls, cat
 
+[# Step 1]  (Optional)
+>  ~ ssh bandit18@bandit.labs.overthewire.org -p 2220 ls -la
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit18@bandit.labs.overthewire.org's password:
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+total 24
+drwxr-xr-x  2 root     root     4096 May  7 20:14 .
+drwxr-xr-x 41 root     root     4096 May  7 20:14 ..
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r-----  1 bandit19 bandit18 3549 May  7 20:14 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+-rw-r-----  1 bandit19 bandit18   33 May  7 20:14 readme
+
+[# Step 2]
+>  ~ ssh bandit18@bandit.labs.overthewire.org -p 2220 cat readme
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit18@bandit.labs.overthewire.org's password:
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+
+------------------------------------------------------------------------------------------------------------------------
+[Method 2] — Using “Pseudo Terminal”
+[# Step 1]
+>  ~ ssh bandit18@bandit.labs.overthewire.org -p 2220 -t /bin/sh
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit18@bandit.labs.overthewire.org's password:
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+
+[# Step 2]
+$ ls -al
+total 24
+drwxr-xr-x  2 root     root     4096 May  7 20:14 .
+drwxr-xr-x 41 root     root     4096 May  7 20:14 ..
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r-----  1 bandit19 bandit18 3549 May  7 20:14 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+-rw-r-----  1 bandit19 bandit18   33 May  7 20:14 readme
+$ cat readme
+IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+
+[# Step 3]
+$ exit
+Connection to bandit.labs.overthewire.org closed.
+
+
+
+----------------------------------------------------------------------------------------------------------------
+Update — The 3rd Method: using bash shell.
+To understand the solution below, read Adam Edelweiss’s explanation.
+To understand the difference between /bin/sh vs /bin/bash, read https://stackoverflow.com/a/5725402.
+
+[# Step 1]
+>  ~ ssh bandit18@bandit.labs.overthewire.org -p 2220 /bin/bash
+bandit18@bandit.labs.overthewire.org's password:
+kfBf3eYk5BPBRzwjqutbbfE887SVc5Yd
+
+[# Step 2]
+ls -la                  # Run "ls -la"
+total 24
+drwxr-xr-x  2 root     root     4096 May  7 20:14 .
+drwxr-xr-x 41 root     root     4096 May  7 20:14 ..
+-rw-r--r--  1 root     root      220 May 15  2017 .bash_logout
+-rw-r-----  1 bandit19 bandit18 3549 May  7 20:14 .bashrc
+-rw-r--r--  1 root     root      675 May 15  2017 .profile
+-rw-r-----  1 bandit19 bandit18   33 May  7 20:14 readme
+cat readme             # Run "cat readme"
+IueksS7Ubh8G3DCwVzrTd8rAVOwq3M5x
+
+[# Step 3]
+exit
+
+Resources
+explainshell.com — match command-line arguments to their help text
+match command-line arguments to their help text
+match command-line arguments to their help textexplainshell.com
+
+
+
