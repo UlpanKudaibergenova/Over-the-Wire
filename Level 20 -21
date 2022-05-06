@@ -10,3 +10,71 @@ ssh, nc, cat, bash, screen, tmux, Unix ‘job control’ (bg, fg, jobs, &, CTRL-
 
 
 
+[# Step 1]
+>  ~ ssh bandit20@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit20@bandit.labs.overthewire.org's password:
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+
+[# Step 2]
+bandit20@bandit:~$ ls -l
+total 12
+-rwsr-x--- 1 bandit21 bandit20 12088 May  7 20:14 suconnect
+
+[# Step 3]
+bandit20@bandit:~$ ./suconnect
+Usage: ./suconnect <portnumber>
+This program will connect to the given port on localhost using TCP. If it receives the correct password from the other side, the next password is transmitted back.
+[# Step 4]
+bandit20@bandit:~$ nmap localhost
+Starting Nmap 7.40 ( https://nmap.org ) at 2020-06-27 12:21 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00025s latency).
+Not shown: 997 closed ports
+PORT      STATE SERVICE
+22/tcp    open  ssh
+113/tcp   open  ident
+30000/tcp open  ndmps
+Nmap done: 1 IP address (1 host up) scanned in 0.11 seconds
+[Method 1] — Start netcat listener → Enter Password
+In 1st Terminal :
+
+[# Step 5]
+bandit20@bandit:~$ nc -lp 6000
+In 2nd Terminal :
+
+[# Step 6]
+>  ~ ssh bandit20@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit20@bandit.labs.overthewire.org's password:
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+
+bandit20@bandit:~$ ./suconnect 6000
+Back to 1st Terminal :
+
+[# Step 7]
+bandit20@bandit:~$ nc -lp 6000
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j          # Input password here!
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr          # Bandit21 Password
+2nd Terminal’s Output :
+
+bandit20@bandit:~$ ./suconnect 6000
+Read: GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+Password matches, sending next password
+[Method 2] — Start netcat listener & Enter Password
+In 1st Terminal :
+
+[# Step 5]
+bandit20@bandit:~$ echo "GbKksEFF4yrVs6il55v6gwY5aVje5f0j" | nc -lp 6000
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
+# OR
+bandit20@bandit:~$ cat /etc/bandit_pass/bandit20 | nc -lp 6000
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
+In 2nd Terminal :
+
+[# Step 6]
+>  ~ ssh bandit20@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit20@bandit.labs.overthewire.org's password:
+GbKksEFF4yrVs6il55v6gwY5aVje5f0j
+
