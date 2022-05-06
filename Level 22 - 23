@@ -1,0 +1,188 @@
+Level Goal
+A program is running automatically at regular intervals from cron, the time-based job scheduler.
+Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+NOTE: Looking at shell scripts written by other people is a very useful skill.
+The script for this level is intentionally made easy to read.
+If you are having problems understanding what it does, try executing it to see the debug information it prints.
+
+Commands you may need to solve this level
+cron, crontab, crontab(5) (use “man 5 crontab” to access this)
+
+-------------------------------------------------------------------------------------------------------------------------------------------------
+To find the password for Level 23
+[# Step 1]: Connect and login to the account with the username & password stated above.
+
+[# Step 2]: As hinted in the description, run cd /etc/cron.d to navigate to the /etc/cron.d directory.
+
+/etc/cron.d/ is a directory that contains system Cron Jobs stored for different users.
+As such, Cron will search for any files containing in the /etc/cron.d directory.
+If have, it examines all stored Crontab files and checks each job to see if it needs to be run in the current minute.
+
+[# Step 3]: Upon launching ls -la, we see a list of Crontab files containing scheduling commands for each Cron Jobs.
+In particular, we notice a Crontab file named cronjob_bandit23.
+
+[# Step 4]: Since our goal is to retrieve bandit23’s password & cronjob_bandit23 is the only Crontab file related to this level.
+Hence, we run cat cronjob_bandit23 to view what Cron Jobs or commands were being executed. This will display the following output :
+
+bandit22@bandit:/etc/cron.d$ cat cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+Let’s dissect what the above output meant. Recall System Wide Crontab file’s syntax: * * * * * <username> <command to execute> .
+
+Hence, in the output, the @reboot and * * * * * meant :
+
+┌───────────┬─────────────────────────────────────────────────────┐
+│  Command  │                     Explanation                     │
+├───────────┼─────────────────────────────────────────────────────┤
+│ @reboot   │ Run once after reboot. @reboot is one of the        │
+│           │ special time specification "nicknames" being        │
+│           │ supported. It replace the 5 initial time and        │
+│           │ date fields, and are prefixed by the '@' character. │
+│           │                                                     │
+│ * * * * * │ Run at every minute.                                │
+└───────────┴─────────────────────────────────────────────────────┘
+Additionally, it indicate bandit23 is the user that will run the specified command : /usr/bin/cronjob_bandit23.sh &> /dev/null.
+
+Finally, the command will execute the shell executable file, cronjob_bandit23.sh, located in the directory /usr/bin/.
+
+Once executed, the &> /dev/null command will redirect the standard output & standard error from executing the cronjob_bandit23.sh file to /dev/null.
+/dev/null is a special file. Whatever you write to /dev/null will be discarded, forgotten into the void. It’s known as the null device in a UNIX system.
+
+In other words, /dev/null is a special device that, if written to it, discards and if read from, reads null.
+
+[# Step 5]: Thus, with the explanation above, we have to run cat /usr/bin/cronjob_bandit23.sh to further investigate what command is being executed in the cronjob_bandit23.sh file.
+
+bandit22@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit23.sh
+#!/bin/bash
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+Let’s examine the script above.
+
+myname=$(whoami)
+
+This line defines the variable myname & assigns the output of whoami command to replace the command itself. 
+This is known as Command Substitution.
+Command substitution occurs when a command is enclosed as follows: $(command).
+When invoked, the whoami command will display the current user’s username.
+Here, the username refers to bandit23 instead of bandit22, even though running whoami at this stage will output bandit22.
+This is because it is user bandit23 who run cronjob_bandit23.sh.
+To prove, run ls -l /usr/bin/cronjob_bandit23.sh will indicate that cronjob_bandit23.sh is run by user bandit23.
+
+
+https://www.booleanworld.com/introduction-linux-file-permissions/
+mytarget=$(echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1)
+
+Similarly, this line defines the variable mytarget & assigns the output of echo I am user $myname | md5sum | cut -d ‘ ‘ -f 1 commands to replace the commands itself using the Command Substitution.
+Pipe symbol | is used in combining the 3 shell commands, to be executed in succession.
+Meaning, the output of 1st command acts as an input to 2nd command, and this command’s output act as an input to the 3rd command.
+Note:
+
+Pipes are unidirectional where data flows from left to right through the pipeline.
+
+Here, $myname will access the value stored in the variable myname and print it on STDOUT.
+Note:
+
+To access the value stored in a variable, prefix its name with the dollar sign $.
+
+echo I am user $myname
+
+This line will display I am user bandit23 where myname = bandit23.
+echo I am user $myname | md5sum
+
+Essentially, md5sum compute and check 128-bit MD5 message digest or hashes.
+It is designed to verify data integrity using MD5 (Message Digest Algorithm 5), as virtually any change to a file will cause its MD5 hash to change. 
+Most commonly, md5sum is used to verify that a file has not changed as a result of a faulty file transfer, a disk error or non-malicious meddling.
+Hence, in this line echo I am user $myname | md5sum, it will computes MD5 checksum for the input string I am user bandit23 and output the 128–bit cryptographic hash as follows:
+bandit22@bandit:/etc/cron.d$ echo I am user bandit23 | md5sum    - IMPORTANT !!!!!
+8ca319486bfbbc3663ea0fbe81326349  -
+echo I am user $myname | md5sum | cut -d ' ' -f 1
+
+Since the md5sum command returns a dash after the generated MD5 hash: 8ca319486bfbbc3663ea0fbe81326349 -. Hence, to extract the MD5 hash, cut command is used.
+Brief explanation of cut command :
+SYNTAX: cut -d “delimiter” -f (field number) filename.txt
+┌─────────┬──────────────────────────────────────────────────┐
+│ Command │                   Explanation                    │
+├─────────┼──────────────────────────────────────────────────┤
+│ Cut     │ Print selected parts of lines from each file to  │
+│         │ standard output.                                 │
+└─────────┴──────────────────────────────────────────────────┘
+┌────────┬──────────────────────────────────────────────────────┐
+│ Option │                     Explanation                      │
+├────────┼──────────────────────────────────────────────────────┤
+│ -d     │ --delimiter=DELIM.                                   │
+│        │ Use DELIM instead of TAB for field delimiter.        │
+│        │                                                      │
+│ -f     │ --fields=LIST.                                       │
+│        │ Select only these fields. Also, print any line that  │
+│        │ contains no delimiter character, unless the -s       │
+│        │ option is specified.                                 │
+└────────┴──────────────────────────────────────────────────────┘
+Here, the cut -d ' ' -f 1 command selects and displays only the 1st field of the line using the field delimiter: space ' '.
+In this case, the line refers to 8ca319486bfbbc3663ea0fbe81326349 - & the 1st field refers to 8ca319486bfbbc3663ea0fbe81326349.
+Putting it all together, the command :
+echo I am user bandit23 | md5sum | cut -d ‘ ‘ -f 1
+will eventually return the MD5 hash: 8ca319486bfbbc3663ea0fbe81326349.
+
+This output is then assigned to the variable mytarget via Command Substitution. this is the name of file in tmp directory.
+
+Finally, cat /etc/bandit_pass/$myname > /tmp/$mytarget will redirects the bandit23‘s password to the 8ca319486bfbbc3663ea0fbe81326349 file, located in tmp. Here, $mytarget will access the value stored in variable mytarget and become the name of the file located in tmp directory.
+
+[# Step 6]: Having the knowledge file /tmp/8ca319486bfbbc3663ea0fbe81326349 contains bandit23‘s password, run cat /tmp/8ca319486bfbbc3663ea0fbe81326349 to retrieve the password.
+
+[# Step 7]: To logout, run exit.
+
+
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[# Step 1]
+>  ~ ssh bandit22@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit22@bandit.labs.overthewire.org's password:
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+
+[# Step 2]
+bandit22@bandit:~$ cd /etc/cron.d
+
+[# Step 3]
+bandit22@bandit:/etc/cron.d$ ls -la
+total 36
+drwxr-xr-x  2 root root 4096 May 14 14:04 .
+drwxr-xr-x 87 root root 4096 May 14 09:41 ..
+-rw-r--r--  1 root root   62 May 14 13:40 cronjob_bandit15_root
+-rw-r--r--  1 root root   62 May 14 14:03 cronjob_bandit17_root
+-rw-r--r--  1 root root  120 May  7 20:14 cronjob_bandit22
+-rw-r--r--  1 root root  122 May  7 20:14 cronjob_bandit23
+-rw-r--r--  1 root root  120 May 14 09:41 cronjob_bandit24
+-rw-r--r--  1 root root   62 May 14 14:04 cronjob_bandit25_root
+-rw-r--r--  1 root root  102 Oct  7  2017 .placeholder
+
+[# Step 4]
+bandit22@bandit:/etc/cron.d$ cat cronjob_bandit23
+@reboot bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+* * * * * bandit23 /usr/bin/cronjob_bandit23.sh  &> /dev/null
+
+[# Step 5]
+bandit22@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit23.sh
+#!/bin/bash
+myname=$(whoami)
+mytarget=$(echo I am user $myname | md5sum | cut -d ' ' -f 1)
+echo "Copying passwordfile /etc/bandit_pass/$myname to /tmp/$mytarget"
+cat /etc/bandit_pass/$myname > /tmp/$mytarget
+bandit22@bandit:/etc/cron.d$ ls -l /usr/bin/cronjob_bandit23.sh
+-rwxr-x--- 1 bandit23 bandit22 211 May  7 20:14 /usr/bin/cronjob_bandit23.sh
+
+[# Step 6]
+bandit22@bandit:/etc/cron.d$ cat /tmp/8ca319486bfbbc3663ea0fbe81326349
+jc1udXuA1tiHqjIsL8yaapX5XIAI6i0n
+
+[# Step 7]
+bandit22@bandit:/etc/cron.d$ exit
+logout
+Connection to bandit.labs.overthewire.org closed.
