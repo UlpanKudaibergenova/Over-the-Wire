@@ -25,6 +25,7 @@ total 12
 bandit20@bandit:~$ ./suconnect
 Usage: ./suconnect <portnumber>
 This program will connect to the given port on localhost using TCP. If it receives the correct password from the other side, the next password is transmitted back.
+
 [# Step 4]
 bandit20@bandit:~$ nmap localhost
 Starting Nmap 7.40 ( https://nmap.org ) at 2020-06-27 12:21 CEST
@@ -36,6 +37,9 @@ PORT      STATE SERVICE
 113/tcp   open  ident
 30000/tcp open  ndmps
 Nmap done: 1 IP address (1 host up) scanned in 0.11 seconds
+
+
+
 [Method 1] — Start netcat listener → Enter Password
 In 1st Terminal :
 
