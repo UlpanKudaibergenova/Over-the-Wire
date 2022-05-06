@@ -1,0 +1,97 @@
+Level Goal
+A program is running automatically at regular intervals from cron, the time-based job scheduler.
+Look in /etc/cron.d/ for the configuration and see what command is being executed.
+
+Commands you may need to solve this level
+cron, crontab, crontab(5) (use “man 5 crontab” to access this)
+
+----------------------------------------------------------------------------------------------------------------------------------------
+What is Cron and Cron Job ?
+Essentially, Cron is a time — based job scheduler in Unix or Unix-like computer operating systems.
+It schedules a command or script on your server to run automatically in the background, at a designated time and date.
+
+A Cron Job is the scheduled task itself. Cron jobs can be very useful to automate repetitive tasks.
+For instance, you can set a Cron Job to delete temporary files every week to conserve your disk space.
+
+Scripts executed as a Cron Job are generally used for automating system maintenance or administration. 
+However, they can perform other tasks such as sending out email notifications.
+
+Cron Jobs can be set to run by the minute, hour, day of the week, day of the month, month or any combination of these.
+
+What is Crontab ?
+The actions of Cron are driven by a Crontab files. Crontab files is a text file containing a list of Cron Jobs to be run periodically on a given schedule. It is specified using shell commands. CronTab stands for Cron Table.
+
+There are 2 types of Crontab file:
+
+Individual User Crontab file.
+System Wide Crontab file.
+
+[ Individual User Crontab file ]
+Users’ crontab files are named according to the user’s username.
+Each line of a User Crontab file represents a Cron Job. It has the following basic structure with 6 columns arranged like a table:
+
+
+
+Usually found in /etc or a subdirectory of /etc that only system administrators can edit.
+The syntax of System Wide Crontab files slightly differ from the User Crontab. It contains an additional mandatory username field that specifies which user will run the Cron Job.
+* * * * * <username> <command to execute>
+
+(https://crontab.guru/) - The quick and simple editor for cron schedule expressions by Cronitor
+
+
+[# Step 1]
+>  ~ ssh bandit21@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit21@bandit.labs.overthewire.org's password:
+gE269g2h3mw3pwgrj0Ha9Uoqen1c9DGr
+
+[# Step 2]
+bandit21@bandit:~$ cd /etc/cron.d
+
+[# Step 3]
+bandit21@bandit:/etc/cron.d$ ls -la
+total 36
+drwxr-xr-x  2 root root 4096 May 14 14:04 .
+drwxr-xr-x 87 root root 4096 May 14 09:41 ..
+-rw-r--r--  1 root root   62 May 14 13:40 cronjob_bandit15_root
+-rw-r--r--  1 root root   62 May 14 14:03 cronjob_bandit17_root
+-rw-r--r--  1 root root  120 May  7 20:14 cronjob_bandit22
+-rw-r--r--  1 root root  122 May  7 20:14 cronjob_bandit23
+-rw-r--r--  1 root root  120 May 14 09:41 cronjob_bandit24
+-rw-r--r--  1 root root   62 May 14 14:04 cronjob_bandit25_root
+-rw-r--r--  1 root root  102 Oct  7  2017 .placeholder
+
+[# Step 4]
+bandit21@bandit:/etc/cron.d$  cat cronjob_bandit22
+@reboot bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+* * * * * bandit22 /usr/bin/cronjob_bandit22.sh &> /dev/null
+
+[# Step 5]
+bandit21@bandit:/etc/cron.d$ cat /usr/bin/cronjob_bandit22.sh
+#!/bin/bash
+chmod 644 /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+cat /etc/bandit_pass/bandit22 > /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+
+[# Step 6]
+bandit21@bandit:/etc/cron.d$ cat /tmp/t7O6lds9S0RqQh9aMcz6ShpAoZKF7fgv
+Yk7owGAcWjwMVRwrTesJEwB7WVOiILLI
+
+[# Step 7]
+bandit21@bandit:/etc/cron.d$ exit
+logout
+Connection to bandit.labs.overthewire.org closed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
